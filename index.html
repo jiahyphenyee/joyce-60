@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Messages for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Reenie+Beanie&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #5d9bd6;      /* sky colour of home image, fills any gap above it */
+    --list-bg: #f9f0e0;
+    --msg-bg: #fcf2ea;
+    --ink: #111;
+    --title-blue: #6fa8dc;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #e9e2d6; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100dvh; }
+  section { display: none; min-height: 100dvh; }
+  section.on { display: block; }
+  .script { font-family: "Reenie Beanie", cursive; font-weight: 400; }
+  button { font: inherit; color: inherit; }
+
+  /* ---------- Home ---------- */
+  #home.on { display: flex; align-items: flex-end; justify-content: center; height: 100dvh; background: var(--blue); overflow: hidden; }
+  .wall { position: relative; width: min(100%, calc(100dvh * 9 / 16)); aspect-ratio: 9 / 16; }
+  .wall img { display: block; width: 100%; height: 100%; }
+  /* invisible tap area sitting over the app icon + label in the image */
+  .open { position: absolute; left: 6%; top: 6%; width: 30%; height: 25%; background: none; border: 0; padding: 0; cursor: pointer; color: transparent; }
+  .wall.noimg .open { color: #fff; font-size: 18px; }
+
+  /* ---------- List ---------- */
+  #list { background: var(--list-bg); padding: 28px 28px 60px; }
+  .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  #list h1 { margin: 0; font-size: 56px; line-height: 1; color: var(--title-blue); }
+  .icon { flex: none; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; padding: 0; cursor: pointer; }
+  .icon svg { width: 28px; height: 28px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  #q { display: block; width: 100%; margin: 22px 0 10px; padding: 6px 0; font: inherit; font-size: 20px; color: var(--ink);
+       background: none; border: 0; border-bottom: 2px solid var(--ink); border-radius: 0; outline: none; -webkit-appearance: none; }
+  #q::placeholder { color: var(--ink); opacity: .55; }
+  #names { list-style: none; margin: 0; padding: 0; }
+  #names a { display: block; padding: 34px 0 30px; font-size: 24px; font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--ink); }
+  #names li:last-child a { border-bottom: 0; }
+  .empty { padding: 30px 0; opacity: .6; }
+
+  /* ---------- Message ---------- */
+  #msg { background: var(--msg-bg); padding: 16px 28px 70px; }
+  #msg .icon { margin-left: auto; }
+  .from { display: flex; align-items: center; justify-content: center; gap: 22px; margin: 26px 0 40px; }
+  .from svg { width: 50px; height: 54px; flex: none; }
+  .from span { font-size: 54px; line-height: 1; }
+  #body > * { margin: 0 0 30px; }
+  #body img, #body video { display: block; width: 100%; height: auto; border: 2px solid var(--ink); border-radius: 12px; background: var(--msg-bg); }
+  #body img { min-height: 120px; }
+  #body video { background: #000; max-height: 75dvh; }
+  #body p { font-size: 18px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <section id="home">
+    <div class="wall">
+      <img src="home.jpg" alt="" onerror="this.style.display='none';this.parentNode.classList.add('noimg')">
+      <button class="open" data-go="#/list" aria-label="Open Messages for you">Messages for you</button>
+    </div>
+  </section>
+
+  <section id="list">
+    <div class="top">
+      <h1 class="script">messages for you</h1>
+      <button class="icon" data-go="#/" aria-label="Home">
+        <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-6h4v6"/></svg>
+      </button>
+    </div>
+    <input id="q" type="search" placeholder="Search" autocomplete="off" aria-label="Search names">
+    <ul id="names"></ul>
+  </section>
+
+  <section id="msg">
+    <div class="top">
+      <button class="icon" data-go="#/list" aria-label="Back to messages">
+        <svg viewBox="0 0 24 24"><path d="M3 13h5l1.5 3h5L16 13h5"/><path d="M5.5 5h13L21 13v6H3v-6z"/></svg>
+      </button>
+    </div>
+    <div class="from">
+      <svg viewBox="0 0 64 68" aria-hidden="true"><path d="M30 24C25 9 5 12 8 30c2 14 20 22 30 32 8-13 18-28 16-46C52 5 35 6 30 24z" fill="none" stroke="#e8191e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="script" id="from"></span>
+    </div>
+    <div id="body"></div>
+  </section>
+
+</div>
+
+<script>
+// Shown only if messages.csv can't be loaded (e.g. opening the file directly on your computer)
+const SAMPLE = `name,message,images,video
+Alice,"Sample: message only.\nSecond line.",,
+Ben,,,ben.mp4
+Chloe,"Sample: message with one image.",chloe-1.jpg,
+Daniel,"Sample: message with several images.",daniel-1.jpg|daniel-2.jpg|daniel-3.jpg,
+`;
+
+let people = [];
+const $ = id => document.getElementById(id);
+
+function parseCSV(text) {
+  const rows = []; let row = [], cur = '', q = false;
+  text = text.replace(/^\uFEFF/, '');
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+      else cur += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cur); cur = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cur); cur = ''; rows.push(row); row = [];
+    } else cur += c;
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+  return rows.filter(r => r.some(v => v.trim() !== ''));
+}
+
+function load(text) {
+  const rows = parseCSV(text);
+  const head = rows.shift().map(h => h.trim().toLowerCase());
+  const col = (...names) => head.findIndex(h => names.includes(h));
+  const iName = col('name'), iMsg = col('message', 'messages', 'text'),
+        iImg = col('images', 'image', 'photos', 'photo'), iVid = col('video', 'videos');
+  const get = (r, i) => (i >= 0 && r[i] ? r[i].trim() : '');
+  people = rows.map(r => ({
+    name: get(r, iName),
+    message: get(r, iMsg),
+    images: get(r, iImg).split('|').map(s => s.trim()).filter(Boolean),
+    video: get(r, iVid)
+  })).filter(p => p.name);
+  renderList();
+  route();
+}
+
+// A bare file name is looked up in the media/ folder; full URLs and paths are used as-is
+const src = f => encodeURI(/^https?:\/\//.test(f) || f.includes('/') ? f : 'media/' + f);
+
+function renderList() {
+  const term = $('q').value.trim().toLowerCase();
+  const ul = $('names'); ul.innerHTML = '';
+  people.forEach((p, i) => {
+    if (term && !p.name.toLowerCase().includes(term)) return;
+    const li = document.createElement('li'), a = document.createElement('a');
+    a.href = '#/m/' + i; a.textContent = p.name;
+    li.appendChild(a); ul.appendChild(li);
+  });
+  if (!ul.children.length) {
+    const li = document.createElement('li');
+    li.className = 'empty'; li.textContent = 'No names found';
+    ul.appendChild(li);
+  }
+}
+
+function renderMsg(p) {
+  $('from').textContent = 'from ' + p.name;
+  const body = $('body'); body.innerHTML = '';
+  const img = f => { const el = document.createElement('img'); el.src = src(f); el.alt = ''; el.loading = 'lazy'; body.appendChild(el); };
+  if (p.video) {
+    const v = document.createElement('video');
+    v.src = src(p.video) + '#t=0.001';   // makes iPhone show the first frame
+    v.controls = true; v.playsInline = true; v.preload = 'metadata';
+    body.appendChild(v);
+  }
+  if (p.images.length) img(p.images[0]);
+  if (p.message) { const el = document.createElement('p'); el.textContent = p.message; body.appendChild(el); }
+  p.images.slice(1).forEach(img);
+}
+
+function route() {
+  const h = location.hash || '#/';
+  const m = h.match(/^#\/m\/(\d+)$/);
+  const person = m && people[+m[1]];
+  const screen = person ? 'msg' : h === '#/list' ? 'list' : 'home';
+  $('body').innerHTML = '';              // stops any playing video
+  if (person) renderMsg(person);
+  ['home', 'list', 'msg'].forEach(id => $(id).classList.toggle('on', id === screen));
+  window.scrollTo(0, 0);
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-go]');
+  if (b) location.hash = b.dataset.go;
+});
+$('q').addEventListener('input', renderList);
+window.addEventListener('hashchange', route);
+
+fetch('messages.csv', { cache: 'no-cache' })
+  .then(r => { if (!r.ok) throw 0; return r.text(); })
+  .then(load)
+  .catch(() => load(SAMPLE));
+</script>
+</body>
+</html>
